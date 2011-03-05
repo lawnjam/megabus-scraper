@@ -21,10 +21,8 @@ response = urllib2.urlopen(req)
 #print response.read()
 
 megaSoup = BeautifulSoup(response.read())
-viewstate = megaSoup.find(name='input', attrs={'name': '__VIEWSTATE'})
-eventvalidation = megaSoup.find(name='input', attrs={'name': '__EVENTVALIDATION'})
-#print viewstate['value']
-#print eventvalidation['value']
+viewstate = megaSoup.find(name='input', attrs={'name': '__VIEWSTATE'})['value']
+eventvalidation = megaSoup.find(name='input', attrs={'name': '__EVENTVALIDATION'})['value']
 
 # 1st POST: set leaving from
 values = {
@@ -32,8 +30,8 @@ values = {
     'Welcome1$ScriptManager1': 'SearchAndBuy1$upSearchAndBuy|SearchAndBuy1$ddlLeavingFrom',
     '__EVENTTARGET': 'SearchAndBuy1$ddlLeavingFrom',
     '__EVENTARGUMENT': '',
-    '__EVENTVALIDATION': eventvalidation['value'],
-    '__VIEWSTATE': viewstate['value'],
+    '__EVENTVALIDATION': eventvalidation,
+    '__VIEWSTATE': viewstate,
     'Welcome1$hdnBasketItemCount': '0',
     'Language1$ddlLanguage': 'en',
     'SearchAndBuy1$txtPassengers': '1',
@@ -67,7 +65,6 @@ values['__EVENTTARGET'] = 'SearchAndBuy1$ddlTravellingTo'
 values['__LASTFOCUS'] = ''
 values['SearchAndBuy1$ddlTravellingTo'] = '10' # 10 is Birmingham
 data = urllib.urlencode(values)
-
 req = urllib2.Request('http://uk.megabus.com/default.aspx', data, headers)
 
 # store the received (pipe-separated) data in a list
@@ -86,15 +83,11 @@ values['Welcome1$ScriptManager1'] = 'SearchAndBuy1$upSearchAndBuy|SearchAndBuy1$
 values['__EVENTTARGET'] = 'SearchAndBuy1$calendarOutboundDate'
 values['__EVENTARGUMENT'] = '4087' ###### FIXME map these values to actual dates - 4087 is 11/03/2011
 values['SearchAndBuy1$ddlTravellingBy'] = '0'
-
 data = urllib.urlencode(values)
-
 req = urllib2.Request('http://uk.megabus.com/default.aspx', data, headers)
 urllib2.urlopen(req)
 
 
 # GET the results
 req = urllib2.Request('http://uk.megabus.com/JourneyResults.aspx', None, headers)
-
 print urllib2.urlopen(req).read()
-
